@@ -1,0 +1,90 @@
+/* 페이지 전체 배경색 통일 */
+body {
+    background-color: #FAFAFA; /* 전체 배경색을 상단 로고 배경과 동일하게 설정 */
+    margin: 0;
+    padding: 0;
+}
+
+/* 페이지 컨테이너 */
+.page-container {
+    width: 100%;
+    height: 100vh; /* 화면 전체 높이 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FAFAFA; /* 페이지 배경 색상 */
+    margin: 0;
+    padding: 0;
+}
+
+/* 로고 콘텐츠 */
+.logo-content {
+    position: absolute;
+    top: 20px; /* 페이지 상단에서 20px 떨어진 위치 */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.logo-content img {
+    width: 150px; /* 로고 이미지 크기 조정 */
+    height: auto;
+}
+
+/* 폼 컨테이너 */
+.form-container {
+    text-align: center;
+    background-color: #FAFAFA; /* 폼의 배경색을 흰색으로 설정 */
+    padding: 20px;
+   
+}
+
+/* 에러 이미지 */
+.form-container img {
+    width: 300px; /* 에러 이미지 크기 조정 */
+    height: auto;
+}
+
+/* 에러 메시지 */
+.form-container h1 {
+    font-size: 48px; /* 에러 메시지 크기 조정 */
+    color: #333; /* 텍스트 색상 */
+    margin: 20px 0;
+}
+
+.form-container p {
+    font-size: 18px; /* 서브 텍스트 크기 조정 */
+    color: #777; /* 서브 텍스트 색상 */
+}
+
+/* 버튼 스타일 (옵션) */
+.form-container button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #FAFAFA;
+    background-color: #282828;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* 미디어 쿼리 - 작은 화면 대응 */
+@media (max-width: 768px) {
+    .logo-content img {
+        width: 120px; /* 모바일 화면에서 로고 크기 조정 */
+    }
+
+    .form-container img {
+        width: 200px; /* 모바일 화면에서 에러 이미지 크기 조정 */
+    }
+
+    .form-container h1 {
+        font-size: 36px; /* 모바일 화면에서 에러 메시지 크기 조정 */
+    }
+
+    .form-container p {
+        font-size: 16px; /* 모바일 화면에서 서브 텍스트 크기 조정 */
+    }
+}
