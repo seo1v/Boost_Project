@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import "../styles/createGroupPage.css";
 import logo from '../assets/logo.svg';
 
 function CreateGroupPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [isSuccess, setIsSuccess] = useState(true); // 성공 여부를 기본값으로 설정
+
+  // 파일 input 참조를 위한 useRef
+  const fileInputRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +25,11 @@ function CreateGroupPage() {
 
   const closeModal = () => {
     setModalVisible(false); // 모달 닫기
+  };
+
+  // 파일 선택 버튼 클릭 핸들러
+  const handleFileSelectClick = () => {
+    fileInputRef.current.click();
   };
 
   return (
@@ -43,8 +51,13 @@ function CreateGroupPage() {
             <label htmlFor="group-image">대표 이미지</label>
             <div className="image-upload">
               <span className="file-label">파일을 선택하세요</span>
-              <input type="file" id="group-image" />
-              <button type="button">파일 선택</button>
+              <input 
+                type="file" 
+                id="group-image" 
+                ref={fileInputRef}
+                style={{ display: 'none' }} 
+              />
+              <button type="button" onClick={handleFileSelectClick}>파일 선택</button>
             </div>
           </div>
 
