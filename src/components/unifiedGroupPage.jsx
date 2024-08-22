@@ -142,11 +142,21 @@ function UnifiedGroupPage() {
         setVisibleCount(prevCount => prevCount + 6);
     };
 
+    // 필터링된 데이터
     const filteredData = data.filter(memory => filter === '' || memory.visibility === filter);
 
+    // 공감수를 숫자로 변환하는 함수
+    const convertLikesToNumber = (likes) => {
+        if (likes.endsWith('K')) {
+            return parseFloat(likes) * 1000; // 'K'가 붙은 경우
+        }
+        return parseFloat(likes); // 'K'가 없는 경우
+    };
+
+    // 정렬된 데이터
     const sortedData = filteredData.sort((a, b) => {
         if (sortOption === '공감순') {
-            return parseInt(b.likes.replace('K', '000')) - parseInt(a.likes.replace('K', '000'));
+            return convertLikesToNumber(b.likes) - convertLikesToNumber(a.likes);
         } else if (sortOption === '최신순') {
             return new Date(b.date) - new Date(a.date);
         }
@@ -160,9 +170,7 @@ function UnifiedGroupPage() {
 
     // D-Day 계산 함수
     const calculateDday = (date) => {
-        // 'D+265'에서 숫자 부분 추출
         const days = parseInt(date.replace('D+', ''), 10);
-        // 현재 날짜 기준으로 days일 전 날짜를 계산
         const today = new Date();
         const targetDate = new Date(today.getTime() - (days * 24 * 60 * 60 * 1000));
         const diffTime = today - targetDate;
