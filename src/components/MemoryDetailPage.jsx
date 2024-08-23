@@ -18,6 +18,7 @@ function MemoryDetailPage() {
   const [isEditCommentModalOpen, setEditCommentModalOpen] = useState(false);
   const [isDeleteCommentModalOpen, setDeleteCommentModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
+  const [selectedCommentId, setSelectedCommentId] = useState(null); 
 
   const handleEditClick = () => setEditModalOpen(true);
   const handleDeleteClick = () => setDeleteModalOpen(true);
@@ -28,22 +29,29 @@ function MemoryDetailPage() {
   const closeEditModal = () => setEditModalOpen(false);
   const closeDeleteModal = () => setDeleteModalOpen(false);
   const closeCommentModal = () => setCommentModalOpen(false);
+  const handleEditCommentClick = (commentId) => {
+    setSelectedCommentId(commentId);
+    setEditCommentModalOpen(true);
+  };
+  const handleDeleteCommentClick = (commentId) => {
+    setSelectedCommentId(commentId);
+    setDeleteCommentModalOpen(true);
+  };
+
+  const closeEditModal = () => setEditModalOpen(false);
+  const closeDeleteModal = () => setDeleteModalOpen(false);
+  const closeCommentModal = () => setCommentModalOpen(false);
   const closeEditCommentModal = () => setEditCommentModalOpen(false);
   const closeDeleteCommentModal = () => setDeleteCommentModalOpen(false);
 
-  const addComment = (nickname, content) => {
-    const newComment = {
-      nickname,
-      content,
-      date: new Date().toLocaleString(), 
-    };
+  const addComment = (newComment) => {
     setComments(prevComments => [...prevComments, newComment]);
     setCommentModalOpen(false);
   };
 
   return (
-    <div className="page-container">
-      <div className="logo-content">
+    <div className="mypage-container">
+      <div className="mylogo-content">
         <img src={logo} alt="logo" />
       </div>
 
@@ -94,23 +102,23 @@ function MemoryDetailPage() {
               <div key={index} className="memorydetail-comment-container">
                 <div>
                   <div className="memorydetail-comment-nickname">{comment.nickname}</div>
-                  <div className="memorydetail-comment-date">{comment.date}</div>
+                  <div className="memorydetail-comment-date">{comment.createdAt}</div>
                 </div>
                 <div className="memorydetail-comment-content">{comment.content}</div>
                 <div className="memorydetail-comment-actions">
-                  <img src={editIcon} alt="edit" onClick={handleEditCommentClick} />
-                  <img src={deleteIcon} alt="delete" onClick={handleDeleteCommentClick} />
+                  <img src={editIcon} alt="edit" onClick={() => handleEditCommentClick(comment.id)} />
+                  <img src={deleteIcon} alt="delete" onClick={() => handleDeleteCommentClick(comment.id)} />
                 </div>
               </div>
             ))
           )}
         </div>
       </div>
-      <EditMemoryModal isOpen={isEditModalOpen} onClose={closeEditModal} />
-      <DeleteMemoryModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} />
+      <EditMemoryModal isOpen={isEditModalOpen} onClose={closeEditModal} postId={selectedPostId} />
+      <DeleteMemoryModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} postId={selectedPostId} />
       <CommentModal isOpen={isCommentModalOpen} onClose={closeCommentModal} onSubmit={addComment} />
-      <EditCommentModal isOpen={isEditCommentModalOpen} onClose={closeEditCommentModal} />
-      <DeleteCommentModal isOpen={isDeleteCommentModalOpen} onClose={closeDeleteCommentModal} />
+      <EditCommentModal isOpen={isEditCommentModalOpen} onClose={closeEditCommentModal} commentId={selectedCommentId} />
+      <DeleteCommentModal isOpen={isDeleteCommentModalOpen} onClose={closeDeleteCommentModal} commentId={selectedCommentId} />
     </div>
   );
 }

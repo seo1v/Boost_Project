@@ -13,6 +13,39 @@ import { Link } from 'react-router-dom';
 function GroupPage() {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [likeCount, setLikeCount] = useState(10000);
+  const [posts, setPosts] = useState([]);
+  const [keyword, setKeyword] = useState('');
+  const [sortBy, setSortBy] = useState('latest');
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isPublic, setIsPublic] = useState(true);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [keyword, sortBy, page, isPublic]);
+
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/posts?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&keyword=${keyword}&isPublic=${isPublic}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setPosts(result.data);
+        setTotalPages(result.totalPages);
+      } else {
+        console.error('게시물 목록 조회 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('서버 연결 실패:', error);
+    }
+  };
 
   const handleEditClick = () => setEditModalOpen(true);
   const handleDeleteClick = () => setDeleteModalOpen(true);
@@ -20,9 +53,49 @@ function GroupPage() {
   const closeEditModal = () => setEditModalOpen(false);
   const closeDeleteModal = () => setDeleteModalOpen(false);
 
+  const likeGroup = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('그룹 공감하기 성공:', result.message);
+        setLikeCount(prevCount => prevCount + 1); 
+      } else {
+        console.error('그룹 공감하기 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('서버 연결 실패:', error);
+    }
+  };
+
+  const handleLikeClick = () => {
+    likeGroup();
+  };
+
+  const handleSearchChange = (e) => {
+    setKeyword(e.target.value);
+    setPage(1); 
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setPage(1); 
+  };
+
+  const handleFilterChange = (filter) => {
+    setIsPublic(filter === '공개');
+    setPage(1); 
+  };
+
   return (
-    <div className="page-container">
-      <div className="logo-content">
+    <div className="mypage-container">
+      <div className="mylogo-content">
         <img src={logo} />
       </div>
 
@@ -45,7 +118,7 @@ function GroupPage() {
           
           <div className="group-title-header">
             <div className="group-title">달봉이네 가족</div>
-            <div className="group-stats">추억 8 | 그룹 공간 1.5K</div>
+            <div className="group-stats">추억 8 | 그룹 공감 {likeCount.toLocaleString()}개</div>
           </div>
 
           <div className="group-description">
@@ -60,7 +133,7 @@ function GroupPage() {
             </div>
 
             <div className="group-actions">
-              <button className="button-empathy">
+              <button className="button-empathy" onClick={handleLikeClick}>
                 <img src={favicon} className="favicon" />
                 공감 보내기
               </button>
@@ -82,31 +155,55 @@ function GroupPage() {
         <div className="memory-search">
           
           <div className="privacy-select">
-            <div className="public" selected>
-              <img src={publicimg} />
-            </div>
-            <div value="private" className="private">
-              <img src={privateimg} />
-            </div>
+            <button 
+              onClick={() => handleFilterChange('공개')} 
+              className={`privacy-select-public ${isPublic ? 'active' : ''}`}
+            >
+              <img src={publicimg} alt="공개" />
+            </button>
+            <button 
+              onClick={() => handleFilterChange('비공개')} 
+              className={`privacy-select-private ${!isPublic ? 'active' : ''}`}
+            >
+              <img src={privateimg} alt="비공개" />
+            </button>
           </div>
         
           <div className="input-container">
-            <input type="text" className="inputtext" placeholder="태그 혹은 제목을 입력해 주세요" />
+            <input 
+            type="text" 
+            className="inputtext" 
+            placeholder="태그 혹은 제목을 입력해 주세요" 
+            value={keyword}
+            onChange={handleSearchChange}
+            />
           </div>
 
-          <select className="memory-order">
-            <option value="empathy">
-              공감순 
-            </option>
-            <option value="recommend">
-              추천순 
-            </option>
+          <select className="memory-order" value={sortBy} onChange={handleSortChange}>
+            <option value="latest">최신순</option>
+            <option value="mostCommented">댓글순</option>
+            <option value="mostLiked">공감순</option>
           </select>
 
         </div>
 
-        <div className="no-memory">
-          <img src={nomemory} />
+        <div className="memory-items">
+          {posts.length === 0 ? (
+            <div className="no-memory">
+              <img src={nomemory} />
+            </div>
+          ) : (
+            posts.map(post => (
+              <div key={post.id} className="memory-item">
+                <img src={post.imageUrl} alt={post.title} />
+                <div className="memory-info">
+                  <h3>{post.title}</h3>
+                  <p>{post.nickname}</p>
+                  <p>{post.moment}</p>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         <Link to="/uploadmemory">
@@ -115,11 +212,21 @@ function GroupPage() {
             >추억 올리기</button>
           </div>
         </Link>
+
+        <div className="pagination">
+          <button onClick={() => setPage(prevPage => Math.max(prevPage - 1, 1))} disabled={page === 1}>
+            이전
+          </button>
+          <span>{page} / {totalPages}</span>
+          <button onClick={() => setPage(prevPage => Math.min(prevPage + 1, totalPages))} disabled={page === totalPages}>
+            다음
+          </button>
+        </div>
         
       </div>
 
-      <EditGroupModal isOpen={isEditModalOpen} onClose={closeEditModal} />
-      <DeleteGroupModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} />
+      <EditGroupModal isOpen={isEditModalOpen} onClose={closeEditModal} groupId={groupId} />
+      <DeleteGroupModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} groupId={groupId} />
     </div>
   );
 }

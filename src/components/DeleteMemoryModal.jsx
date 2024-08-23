@@ -2,16 +2,35 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import "../styles/DeleteGroupModal.css";
 
-function DeleteGroupModal({ isOpen, onClose }) {
+function DeleteGroupModal({ isOpen, onClos, postId }) {
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleDelete = () => {
-    // 삭제 작업 처리 로직을 여기에 추가
-    console.log({
-      password,
-    });
+  const handleDelete = async () => {
+    const requestBody = {
+      postPassword: password,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('게시글 삭제 성공:', result.message);
+        onClose();  
+      } else {
+        console.error('게시글 삭제 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('서버 연결 실패:', error);
+    }
   };
 
   return (

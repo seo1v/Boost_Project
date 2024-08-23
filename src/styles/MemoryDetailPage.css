@@ -1,19 +1,8 @@
-.comment-button {
-  width: 400px;
-  height: 50px;
-  border-radius: 6px;
-  color: white;
-  background-color: #282828;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
-
-.page-container {
+.mypage-container {
   width: 1920px;
 }
 
-.logo-content {
+.mylogo-content {
   position: absolute;
   top: 0;
   width: 1920px;

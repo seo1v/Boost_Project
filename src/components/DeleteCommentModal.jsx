@@ -1,16 +1,39 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 
-function DeleteCommentModal({ isOpen, onClose }) {
+function DeleteCommentModal({ isOpen, onClose, commentId }) {
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleDelete = () => {
-    // 삭제 작업 처리 로직을 여기에 추가
-    console.log({
-      password,
-    });
+  const handleDelete = async () => {
+    if (password) {
+      const requestBody = {
+        password,
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/comments/${commentId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('댓글 삭제 성공:', result.message);
+          onClose();  
+        } else {
+          console.error('댓글 삭제 실패:', response.statusText);
+        }
+      } catch (error) {
+        console.error('서버 연결 실패:', error);
+      }
+    } else {
+      alert("비밀번호를 입력해 주세요.");
+    }
   };
 
   return (

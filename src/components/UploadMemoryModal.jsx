@@ -25,6 +25,39 @@ function UploadMemoryModal({ isOpen, onClose }) {
     onClose(); // 권한 요청 후 메인 모달도 닫기
   };
 
+  const uploadMemory = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("nickname", nickname);
+      formData.append("title", title);
+      formData.append("content", content);
+      formData.append("postPassword", password);
+      formData.append("groupPassword", groupPassword); 
+      if (image) {
+        formData.append("imageUrl", image);
+      }
+      formData.append("tags", JSON.stringify(tags));
+      formData.append("location", location);
+      formData.append("moment", memoryDate);
+      formData.append("isPublic", isPublic);
+
+      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/posts`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('게시물 등록 성공:', result);
+        onClose(); 
+      } else {
+        console.error('게시물 등록 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('서버 연결 실패:', error);
+    }
+  };
+
   return (
     <>
       {/* <Modal isOpen={isOpen} onClose={onClose}> */}

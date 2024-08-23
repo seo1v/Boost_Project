@@ -162,6 +162,10 @@
   margin: 10px 0px;
 }
 
+.uploadmemory-pwd-container {
+  width: 400px;
+}
+
 .uploadmemory-pwdinput {
   width: 400px;
   height: 45px;

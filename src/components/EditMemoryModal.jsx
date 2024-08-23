@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BigModal from './BigModal';
 import "../styles/EditMemoryModal.css";
 
-function EditMemoryModal({ isOpen, onClose }) {
+function EditMemoryModal({ isOpen, onClose, postId }) {
   const [nickname, setNickname] = useState("");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
@@ -13,13 +13,38 @@ function EditMemoryModal({ isOpen, onClose }) {
   const [isPublic, setIsPublic] = useState(true);
   const [password, setPassword] = useState("");
 
-  const handleSubmit = () => {
-    // 수정 작업 처리 로직을 여기에 추가
-    console.log({
-      groupName,
+  const handleSubmit = async () => {
+    const requestBody = {
+      nickname,
+      title,
+      content,
+      postPassword: password,
+      imageUrl: image ? URL.createObjectURL(image) : "",
+      tags,
+      location,
+      moment: memoryDate,
       isPublic,
-      password,
-    });
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('게시글 수정 성공:', result);
+        onClose();  
+      } else {
+        console.error('게시글 수정 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('서버 연결 실패:', error);
+    }
   };
 
   return (

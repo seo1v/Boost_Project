@@ -1,8 +1,8 @@
-.page-container {
+.mypage-container {
   width: 1920px;
 }
 
-.logo-content {
+.mylogo-content {
   position: absolute;
   top: 0;
   width: 1920px;
@@ -68,24 +68,27 @@
   justify-content: space-between;
   align-items: center;
   width: 350px;
-  margin-left: 10px;
+  white-space: nowrap;
 }
 
 .group-title {
   font-size: 30px;
   font-weight: 700;
-  margin: 10px 0;
+  margin: 10px;
+  white-space: nowrap;
 }
 
 .group-stats {
   font-size: 18px;
   font-weight: 700;
+  margin: 10px;
 }
 
 .group-description {
   font-size: 18px;
   margin-bottom: 25px;
   margin-left: 10px;
+  white-space: nowrap;
 }
 
 .group-badge {
@@ -143,7 +146,7 @@
   font-weight: 700;
   text-align: center;
   width: 100%;
-  margin-left: 9%;
+  margin-left: 10%;
 }
 
 .memory-button {
@@ -165,9 +168,14 @@
 
 .privacy-select {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
+}
+
+.privacy-select-public {
+  padding: 0;
+}
+
+.privacy-select-private {
+  padding: 0;
 }
 
 .inputtext {
@@ -178,6 +186,7 @@
 .memory-order {
   width: 160px;
   height: 45px;
+  margin: 0px 5px;
 }
 
 .no-memory {
@@ -194,4 +203,26 @@
   margin-top: 3%;
   margin-bottom: -3%;
   margin-left: -2%;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  position: absolute; 
+  bottom: 20px; 
+  left: 49%; 
+  transform: translateX(-50%); 
+}
+
+.pagination button {
+  margin: 0 10px; 
+  padding: 10px 20px; 
+  font-size: 16px; 
+  cursor: pointer;
+}
+
+.pagination span {
+  font-size: 16px; 
+  margin: 0 10px; 
 }

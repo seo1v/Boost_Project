@@ -2,17 +2,42 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import "../styles/CommentModal.css";
 
-function CommentModal({ isOpen, onClose, onSubmit }) {
+function CommentModal({ isOpen, onClose, onSubmit, postId }) {
   const [nickname, setNickname] = useState('');
   const [content, setContent] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (nickname && content && password) {
-      onSubmit(nickname, content);
-      setNickname('');
-      setContent('');
-      setPassword('');
+      const requestBody = {
+        nickname,
+        content,
+        password
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('댓글 등록 성공:', result);
+          onSubmit(result);
+          setNickname('');
+          setContent('');
+          setPassword('');
+          onClose(); 
+        } else {
+          console.error('댓글 등록 실패:', response.statusText);
+        }
+      } catch (error) {
+        console.error('서버 연결 실패:', error);
+      }
     } else {
       alert("모든 필드를 입력해 주세요.");
     }

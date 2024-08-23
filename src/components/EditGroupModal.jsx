@@ -2,22 +2,47 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import "../styles/EditGroupModal.css";
 
-function EditGroupModal({ isOpen, onClose }) {
+function EditGroupModal({ isOpen, onClose, groupId }) {
   const [groupName, setGroupName] = useState("달봉이네 가족");
   const [isPublic, setIsPublic] = useState(false);
   const [password, setPassword] = useState("");
+  const [introduction, setIntroduction] = useState("");
+  const [imageUrl, setImageUrl] = useState("");  
 
   const handleGroupNameChange = (e) => setGroupName(e.target.value);
   const handlePublicChange = () => setIsPublic(!isPublic);
   const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleIntroductionChange = (e) => setIntroduction(e.target.value);
+  const handleImageUrlChange = (e) => setImageUrl(e.target.files[0]); 
 
-  const handleSubmit = () => {
-    // 수정 작업 처리 로직을 여기에 추가
-    console.log({
-      groupName,
-      isPublic,
-      password,
-    });
+  const handleSubmit = async () => {
+    const requestBody = {
+      name: groupName,
+      password: password,
+      imageUrl: imageUrl ? URL.createObjectURL(imageUrl) : "",  
+      isPublic: isPublic,
+      introduction: introduction
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/groups/${groupId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('그룹 정보 수정 성공:', result);
+        onClose();  
+      } else {
+        console.error('그룹 정보 수정 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('서버 연결 실패:', error);
+    }
   };
 
   return (
@@ -35,12 +60,21 @@ function EditGroupModal({ isOpen, onClose }) {
         
         <div className="edit-img">대표 이미지</div>
         <div className="edit-img-container">
-          <input className="edit-inputimg" type="file" />
+          <input 
+          className="edit-inputimg" 
+          type="file"
+          onChange={handleImageUrlChange} 
+          />
         </div>
 
         <div className="edit-group">그룹 소개</div>
         <div className="edit-group-container">
-          <textarea className="edit-inputgroup" placeholder="그룹을 소개해 주세요"></textarea>
+          <textarea 
+          className="edit-inputgroup" 
+          placeholder="그룹을 소개해 주세요"
+          value={introduction}
+          onChange={handleIntroductionChange}
+          ></textarea>
         </div>
 
         <div className="edit-private">그룹 공개 선택</div>
