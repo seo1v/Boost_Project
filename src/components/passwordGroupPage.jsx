@@ -45,7 +45,7 @@ function PasswordGroupPage() {
     setIsModalOpen(false);
   };
 
-  return (
+  return ( <div className="password">
     <div className="page-container">
       <div className="logo-content">
         <img src={logo} alt="logo" />
@@ -80,6 +80,7 @@ function PasswordGroupPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
