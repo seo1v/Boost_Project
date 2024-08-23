@@ -4,20 +4,45 @@ import logo from '../assets/logo.svg';
 
 function CreateGroupPage() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(true); // 성공 여부를 기본값으로 설정
+  const [isSuccess, setIsSuccess] = useState(true);
 
   // 파일 input 참조를 위한 useRef
   const fileInputRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 여기서 폼 검증과 API 제출을 처리할 수 있습니다
-    const isValid = true; // 폼 검증을 시뮬레이션
 
-    if (isValid) {
-      setIsSuccess(true);  // 성공 시
-    } else {
-      setIsSuccess(false); // 실패 시
+    // 폼 데이터 수집
+    const name = e.target["group-name"].value;
+    const password = e.target["password"].value;
+    const introduction = e.target["group-description"].value;
+    const isPublic = e.target.visibility.value === "public";
+
+    try {
+      const response = await fetch('http://localhost:3000/api/groups', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: name,
+          password: password,
+          imageUrl: "", // imageUrl은 파일을 올리면 서버에서 처리됨
+          isPublic: isPublic,
+          introduction: introduction,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        const data = await response.json();
+        setIsSuccess(true);
+        localStorage.setItem("groupId", groupId);  // groupId 저장
+      } else {
+        setIsSuccess(false);
+      }
+    } catch (error) {
+      setIsSuccess(false);
+      console.error('그룹 생성 중 오류 발생:', error);
     }
 
     setModalVisible(true); // 모달 표시
@@ -44,7 +69,7 @@ function CreateGroupPage() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="group-name">그룹명</label>
-            <input type="text" id="group-name" placeholder="그룹명을 입력하세요." />
+            <input type="text" id="group-name" placeholder="그룹명을 입력하세요." required />
           </div>
 
           <div className="form-group">
@@ -63,14 +88,14 @@ function CreateGroupPage() {
 
           <div className="form-group">
             <label htmlFor="group-description">그룹 소개</label>
-            <textarea id="group-description" placeholder="그룹 소개를 입력하세요."></textarea>
+            <textarea id="group-description" placeholder="그룹 소개를 입력하세요." required></textarea>
           </div>
 
           <div className="form-group">
             <label>그룹 선택 여부</label>
             <div className="visibility-options">
               <label>
-                <input type="radio" name="visibility" value="public" />
+                <input type="radio" name="visibility" value="public" defaultChecked />
                 공개
               </label>
               <label>
@@ -82,7 +107,7 @@ function CreateGroupPage() {
 
           <div className="form-group">
             <label htmlFor="password">비밀번호</label>
-            <input type="password" id="password" placeholder="비밀번호를 입력하세요." />
+            <input type="password" id="password" placeholder="비밀번호를 입력하세요." required />
           </div>
 
           <button type="submit" className="create-group">만들기</button>
@@ -103,3 +128,4 @@ function CreateGroupPage() {
 }
 
 export default CreateGroupPage;
+

@@ -5,6 +5,7 @@ import logo from '../assets/logo.svg'; // 로고 임포트
 
 function ErrorPage () {
     return (
+      <div className="error">
     <div className="page-container">
         <div className="logo-content">
           <img src={logo} alt="logo" />
@@ -13,6 +14,7 @@ function ErrorPage () {
         <div className="form-container">
           <img src={errorlogo} alt="error404" />
         </div>
+      </div>
       </div>
     );
 }

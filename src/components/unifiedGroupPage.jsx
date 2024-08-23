@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/unifiedGroupPage.css";
 import logo from '../assets/logo.svg';
 import { useNavigate } from 'react-router-dom';
@@ -134,31 +134,70 @@ const initialMemoryData = [
 function UnifiedGroupPage() {
     const navigate = useNavigate();
     const [visibleCount, setVisibleCount] = useState(6);
-    const [data] = useState(initialMemoryData);
+    const [data, setData] = useState([]);
     const [filter, setFilter] = useState('공개');
     const [sortOption, setSortOption] = useState('공감순');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Fetch 그룹 정보를 가져오는 함수
+    const fetchGroupData = async () => {
+        const groupId = localStorage.getItem("groupId"); // 저장된 groupId 가져오기
+        if (!groupId) {
+            setError('그룹 ID를 찾을 수 없습니다.');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/groups/${groupId}`);
+            
+            if (response.ok) {
+                const result = await response.json();
+                // 서버에서 받은 데이터를 기반으로 메모리 데이터를 업데이트 (예시로 초기 데이터 사용)
+                // 실제로는 서버에서 받은 데이터를 처리하여 업데이트합니다.
+                setData(initialMemoryData); // 실제 서버에서 받은 데이터로 변경
+                setLoading(false);
+            } else if (response.status === 400) {
+                const errorResult = await response.json();
+                setError(errorResult.message);
+                setLoading(false);
+            } else {
+                setError('서버 오류');
+                setLoading(false);
+            }
+        } catch (error) {
+            setError('서버와의 연결에 실패했습니다.');
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchGroupData();
+    }, []);
 
     const handleLoadMore = () => {
         setVisibleCount(prevCount => prevCount + 6);
     };
 
-    // 필터링된 데이터
     const filteredData = data.filter(memory => filter === '' || memory.visibility === filter);
 
-    // 공감수를 숫자로 변환하는 함수
     const convertLikesToNumber = (likes) => {
         if (likes.endsWith('K')) {
-            return parseFloat(likes) * 1000; // 'K'가 붙은 경우
+            return parseFloat(likes) * 1000;
         }
-        return parseFloat(likes); // 'K'가 없는 경우
+        return parseFloat(likes);
     };
 
-    // 정렬된 데이터
     const sortedData = filteredData.sort((a, b) => {
         if (sortOption === '공감순') {
             return convertLikesToNumber(b.likes) - convertLikesToNumber(a.likes);
         } else if (sortOption === '최신순') {
             return new Date(b.date) - new Date(a.date);
+        } else if (sortOption === '배지순') {
+            return b.badges - a.badges;
+        } else if (sortOption === '추억순') {
+            return b.memories - a.memories;
         }
         return 0;
     });
@@ -168,7 +207,6 @@ function UnifiedGroupPage() {
         marginTop: filter === '공개' ? '20px' : '20px'
     };
 
-    // D-Day 계산 함수
     const calculateDday = (date) => {
         const days = parseInt(date.replace('D+', ''), 10);
         const today = new Date();
@@ -180,13 +218,11 @@ function UnifiedGroupPage() {
 
     return (
         <div className="page-container">
-            {/* 로고 콘텐츠 */}
             <div className="logo-content">
                 <img src={logo} alt="logo" />
                 <button className="make-group" onClick={() => navigate('/creategroup')}>그룹 만들기</button>
             </div>
 
-            {/* 검색 및 필터 섹션 */}
             <div className="search-container">
                 <div className="menu">
                     <button 
@@ -210,12 +246,19 @@ function UnifiedGroupPage() {
                 >
                     <option value="공감순">공감순</option>
                     <option value="최신순">최신순</option>
+                    <option value="배지순">배지순</option>
+                    <option value="추억순">추억순</option>
                 </select>
             </div>
 
-            {hasMemories ? (
+            {loading ? (
+                <div className="loading-container">
+                    <p>로딩 중...</p>
+                </div>
+            ) : error ? (
+                <p className="error-message">{error}</p>
+            ) : hasMemories ? (
                 <>
-                    {/* 메모리 카드 그리드 */}
                     <div className="memory-grid-container" style={gridContainerStyle}>
                         <div className="memory-grid">
                             {sortedData.slice(0, visibleCount).map((memory) => (
@@ -254,7 +297,6 @@ function UnifiedGroupPage() {
                         </div>
                     </div>
 
-                    {/* 더보기 버튼 */}
                     {visibleCount < sortedData.length && (
                         <button className="more-memory" onClick={handleLoadMore}>
                             더보기
@@ -267,9 +309,6 @@ function UnifiedGroupPage() {
                         <img src={icon} alt="Empty Icon" />
                     </div>
                     <button className="make-group" onClick={() => navigate('/creategroup')}>
-                        그룹 만들기
-                    </button>
-                    <button className="secondary-make-group" onClick={() => navigate('/creategroup')}>
                         그룹 만들기
                     </button>
                 </div>

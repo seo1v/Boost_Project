@@ -5,15 +5,40 @@ import logo from '../assets/logo.svg';
 function PasswordGroupPage() {
   const [password, setPassword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
-  const handleSubmit = () => {
-    // 비밀번호를 검증하는 로직 (여기서는 간단히 "1234"와 비교)
-    if (password !== '1234') {
+  const handleSubmit = async () => {
+    const groupId = localStorage.getItem("groupId"); // 저장된 groupId 가져오기
+    if (!groupId) {
+      setModalMessage('그룹 ID를 찾을 수 없습니다.');
       setIsModalOpen(true);
-    } else {
-      // 비밀번호가 일치할 경우의 로직 (예: 다음 페이지로 이동)
-      alert('비밀번호가 일치합니다.');
+      return;
     }
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/verify-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: password }),
+      });
+
+      if (response.status === 200) {
+        setModalMessage('비밀번호가 확인되었습니다');
+        // 비밀번호가 일치할 경우의 로직 (예: 다음 페이지로 이동)
+        // 예를 들어, window.location.href = "/next-page"; 와 같이 페이지 이동을 구현할 수 있습니다.
+      } else if (response.status === 401) {
+        setModalMessage('비밀번호가 일치하지 않습니다.');
+      } else {
+        setModalMessage('오류가 발생했습니다.');
+      }
+    } catch (error) {
+      setModalMessage('서버와의 연결에 실패했습니다.');
+      console.error('비밀번호 검증 중 오류 발생:', error);
+    }
+
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -49,8 +74,8 @@ function PasswordGroupPage() {
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <h3>비공개 그룹 접근 실패</h3>
-            <p>비밀번호가 일치하지 않습니다.</p>
+            <h3>{modalMessage.includes('확인') ? '성공' : '비공개 그룹 접근 실패'}</h3>
+            <p>{modalMessage}</p>
             <button className="submit" onClick={closeModal}>확인</button>
           </div>
         </div>
@@ -60,3 +85,4 @@ function PasswordGroupPage() {
 }
 
 export default PasswordGroupPage;
+
