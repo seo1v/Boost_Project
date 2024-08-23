@@ -5,6 +5,8 @@ import favicon from "../assets/favicon.svg";
 import memoryimg from "../assets/memoryimg.svg";
 import editIcon from "../assets/editicon.svg"; 
 import deleteIcon from "../assets/deleteicon.svg";
+import flowerIcon from "../assets/flower-icon.svg";  
+import commentIcon from "../assets/comment-icon.svg";
 import EditMemoryModal from './EditMemoryModal';
 import DeleteMemoryModal from './DeleteMemoryModal';
 import CommentModal from './CommentModal';
@@ -19,6 +21,7 @@ function MemoryDetailPage() {
   const [isDeleteCommentModalOpen, setDeleteCommentModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [selectedCommentId, setSelectedCommentId] = useState(null); 
+  const [likes, setLikes] = useState(0); 
 
   const handleEditClick = () => setEditModalOpen(true);
   const handleDeleteClick = () => setDeleteModalOpen(true);
@@ -43,6 +46,10 @@ function MemoryDetailPage() {
     setCommentModalOpen(false);
   };
 
+  const handleLikeClick = () => {
+    setLikes(prevLikes => prevLikes + 1); 
+  };
+
   return (
     <div className="mypage-container">
       <div className="mylogo-content">
@@ -64,11 +71,19 @@ function MemoryDetailPage() {
           <div className="memorydetail-title">인천 앞바다에서 무려 60cm 월척을 낚다!</div>
           <div className="memorydetail-tag">#인천 #낚시</div>
 
-          <div className="group-actions">
-            <button className="button-empathy">
-              <img src={favicon} className="favicon" alt="favicon" />
-              공감 보내기
-            </button>
+          <div className="memorydetail-actions">
+            <div className="memorydetail-icons">
+              <img src={flowerIcon} className="flower-icon" alt="공감" />
+              <span className="icon-count">{likes}</span> 
+              <img src={commentIcon} className="comment-icon" alt="댓글" />
+              <span className="icon-count">{comments.length}</span> 
+            </div>
+            <div className="group-actions">
+              <button className="button-empathy" onClick={handleLikeClick}>
+                <img src={favicon} className="favicon" alt="favicon" />
+                공감 보내기
+              </button>
+            </div>
           </div>
             
         </div>

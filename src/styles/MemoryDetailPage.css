@@ -24,6 +24,7 @@
   justify-content: flex-end;
   gap: 10px;
   margin-bottom: 20px;
+  margin-right: -30px;
 }
 
 .memorydetail-button-fix, .memorydetail-button-delete {
@@ -69,7 +70,31 @@
 .group-actions {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  align-items: center;
+}
+
+.memorydetail-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.memorydetail-icons {
+  display: flex;
+  align-items: center;
+}
+
+.memorydetail-icons img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.icon-count {
+  margin-right: 15px;
+  font-size: 16px;
+  color: #333;
 }
 
 .button-empathy {
@@ -85,6 +110,7 @@
   justify-content: center;
   gap: 10px;
   cursor: pointer;
+  margin-top: 50px;
 }
 
 .memorydetail-content {
