@@ -216,7 +216,7 @@ function UnifiedGroupPage() {
         return `D+${diffDays}`;
     };
 
-    return (
+    return ( <div className="unified">
         <div className="page-container">
             <div className="logo-content">
                 <img src={logo} alt="logo" />
@@ -313,6 +313,7 @@ function UnifiedGroupPage() {
                     </button>
                 </div>
             )}
+        </div>
         </div>
     );
 }

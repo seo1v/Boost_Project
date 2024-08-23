@@ -57,7 +57,7 @@ function CreateGroupPage() {
     fileInputRef.current.click();
   };
 
-  return (
+  return ( <div className="create">
     <div className="page-container">
       <div className="logo-content">
         <img src={logo} alt="logo" />
@@ -124,8 +124,8 @@ function CreateGroupPage() {
         </div>
       )}
     </div>
+    </div>
   );
 }
 
 export default CreateGroupPage;
-
