@@ -5,10 +5,10 @@ function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal">
-      <div className="modal-content">
+    <div className="mymodal">
+      <div className="mymodal-content">
         {children}
-        <button className="close-btn" onClick={onClose}>X</button>
+        <button className="my-close-btn" onClick={onClose}>X</button>
       </div>
     </div>
   );
