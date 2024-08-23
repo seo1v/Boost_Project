@@ -23,12 +23,6 @@ function MemoryDetailPage() {
   const handleEditClick = () => setEditModalOpen(true);
   const handleDeleteClick = () => setDeleteModalOpen(true);
   const handleCommentClick = () => setCommentModalOpen(true);
-  const handleEditCommentClick = () => setEditCommentModalOpen(true);
-  const handleDeleteCommentClick = () => setDeleteCommentModalOpen(true);
-
-  const closeEditModal = () => setEditModalOpen(false);
-  const closeDeleteModal = () => setDeleteModalOpen(false);
-  const closeCommentModal = () => setCommentModalOpen(false);
   const handleEditCommentClick = (commentId) => {
     setSelectedCommentId(commentId);
     setEditCommentModalOpen(true);
