@@ -3,15 +3,14 @@ import Modal from "./Modal"
 import "../styles/PermissionRequestModal.css";
 
 
-function PermissionRequestModal({ isOpen, onClose }) {
+function PermissionRequestModal({ isOpen, onClose, onPasswordSubmit }) {
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const handleSubmit = () => {
-    // 제출 처리 로직을 여기에 추가
-    console.log("Password submitted:", password);
-    onClose(); // 제출 후 모달 닫기
+    onPasswordSubmit(password);
+    onClose(); 
   };
 
   return (

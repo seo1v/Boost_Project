@@ -2,7 +2,38 @@ import React, { useState } from 'react';
 import "../styles/PrivateMemoryPermissionPage.css"
 import logo from "../assets/logo.svg";
 
-function PrivateMemoryPermissionPage() {
+function PrivateMemoryPermissionPage({ postId, onAuthorized }) {
+  const [inputPassword, setInputPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handlePasswordChange = (e) => {
+    setInputPassword(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/verify-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: inputPassword }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.isAuthorized) {
+          onAuthorized(); 
+        } else {
+          setErrorMessage("비밀번호가 틀렸습니다. 다시 시도해 주세요.");
+        }
+      } else {
+        setErrorMessage("서버 오류가 발생했습니다. 나중에 다시 시도해 주세요.");
+      }
+    } catch (error) {
+      setErrorMessage("서버 연결에 실패했습니다. 다시 시도해 주세요.");
+    }
+  };
 
   return (
     <div className="page-container">
@@ -22,11 +53,15 @@ function PrivateMemoryPermissionPage() {
         <input className="privatepermission-pwdinput"
           type="password"
           placeholder="추억 비밀번호를 입력해 주세요"
+          value={inputPassword}
+          onChange={handlePasswordChange}
         />
       </div>
+
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       
       <div className="privatepermission-button-container">
-        <button className="privatepermission-button">제출하기</button>
+        <button className="privatepermission-button" onClick={handleSubmit}>제출하기</button>
       </div>
     </div>
   )

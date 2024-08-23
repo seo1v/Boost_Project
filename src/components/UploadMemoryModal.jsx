@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PermissionRequestModal from './PermissionRequestModal';
 import '../styles/UploadMemoryModal.css';
 
-function UploadMemoryModal({ isOpen, onClose }) {
+function UploadMemoryModal({ isOpen, onClose, groupPassword }) {
   const [nickname, setNickname] = useState("");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
@@ -13,16 +13,28 @@ function UploadMemoryModal({ isOpen, onClose }) {
   const [memoryDate, setMemoryDate] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [password, setPassword] = useState("");
-  const [isPermissionModalOpen, setPermissionModalOpen] = useState(false); // 권한 요청 모달 상태 추가
+  const [isPermissionModalOpen, setPermissionModalOpen] = useState(false); 
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const handleSubmit = () => {
-    // 추억 업로드 전 권한 요청 모달 띄우기
     setPermissionModalOpen(true);
   };
 
   const closePermissionModal = () => {
     setPermissionModalOpen(false);
-    onClose(); // 권한 요청 후 메인 모달도 닫기
+    if (isAuthorized) {
+      uploadMemory();
+    }
+  };
+
+  const handlePasswordSubmit = (submittedPassword) => {
+    if (submittedPassword === groupPassword) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+      alert('비밀번호가 일치하지 않습니다.');
+    }
+    closePermissionModal();
   };
 
   const uploadMemory = async () => {
@@ -160,6 +172,7 @@ function UploadMemoryModal({ isOpen, onClose }) {
       <PermissionRequestModal 
         isOpen={isPermissionModalOpen} 
         onClose={closePermissionModal} 
+        onPasswordSubmit={handlePasswordSubmit} 
       />
     </>
   );
