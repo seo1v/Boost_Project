@@ -150,7 +150,7 @@ function UnifiedGroupPage() {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/groups/${groupId}`);
+            const response = await fetch(`https://demo-boost-a.onrender.com/api/groups/${groupId}`);
             
             if (response.ok) {
                 const result = await response.json();

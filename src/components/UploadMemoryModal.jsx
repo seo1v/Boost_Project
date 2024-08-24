@@ -53,7 +53,7 @@ function UploadMemoryModal({ isOpen, onClose, groupPassword }) {
       formData.append("moment", memoryDate);
       formData.append("isPublic", isPublic);
 
-      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/posts`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/groups/${groupId}/posts`, {
         method: 'POST',
         body: formData,
       });

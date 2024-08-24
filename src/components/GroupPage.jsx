@@ -28,7 +28,7 @@ function GroupPage() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/posts?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&keyword=${keyword}&isPublic=${isPublic}`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/groups/${groupId}/posts?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&keyword=${keyword}&isPublic=${isPublic}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ function GroupPage() {
 
   const likeGroup = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/groups/${groupId}/like`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/groups/${groupId}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

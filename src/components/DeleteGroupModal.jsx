@@ -13,7 +13,7 @@ function DeleteGroupModal({ isOpen, onClose, groupId }) {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/groups/${groupId}`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/groups/${groupId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

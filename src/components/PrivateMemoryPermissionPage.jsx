@@ -12,7 +12,7 @@ function PrivateMemoryPermissionPage({ postId, onAuthorized }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}/verify-password`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/posts/${postId}/verify-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

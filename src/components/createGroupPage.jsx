@@ -19,7 +19,7 @@ function CreateGroupPage() {
     const isPublic = e.target.visibility.value === "public";
 
     try {
-      const response = await fetch('http://localhost:3000/api/groups', {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/groups`, {
         method: 'POST',
         body: JSON.stringify({
           name: name,

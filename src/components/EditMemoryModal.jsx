@@ -27,7 +27,7 @@ function EditMemoryModal({ isOpen, onClose, postId }) {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/posts/${postId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ function CommentModal({ isOpen, onClose, onSubmit, postId }) {
       };
 
       try {
-        const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
+        const response = await fetch(`https://demo-boost-a.onrender.com/api/posts/${postId}/comments`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import "../styles/DeleteGroupModal.css";
 
-function DeleteGroupModal({ isOpen, onClos, postId }) {
+function DeleteGroupModal({ isOpen, onClosㄷ, postId }) {
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -13,7 +13,7 @@ function DeleteGroupModal({ isOpen, onClos, postId }) {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+      const response = await fetch(`https://demo-boost-a.onrender.com/api/posts/${postId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

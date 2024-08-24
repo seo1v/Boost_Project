@@ -15,7 +15,7 @@ function EditCommentModal({ isOpen, onClose, commentId }) {
       };
 
       try {
-        const response = await fetch(`http://localhost:3000/api/comments/${commentId}`, {
+        const response = await fetch(`https://demo-boost-a.onrender.com/api/comments/${commentId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
