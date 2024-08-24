@@ -22,7 +22,7 @@ function App() {
         <Route path="/creategroup" element={<CreateGroupPage />} />
         <Route path="/passwordgroup" element={<PasswordGroupPage />} />
         <Route path="/error" element={<ErrorPage />} />
-        <Route path="/unifiedpage" element={<UnifiedGroupPage />} />
+        <Route path="/" element={<UnifiedGroupPage />} />
 
       </Routes>
     </BrowserRouter>
